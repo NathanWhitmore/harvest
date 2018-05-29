@@ -20,7 +20,7 @@ harvest.tolerance.explainer(seed, name,site, iterations, area, growth, density, 
     \item{offtake}{Samples representing the weight of individuals harvested from the area annually}
 }
 \details{
-The grey distribution shown in the background represents the gross productivit (no harvest). It is from this distribution that the annual harvestable biomass is calculated. Net productivity (inclusive of harvest) is represented by the foreground distribution. The difference between the two graphical peaks represents the impact of the harvest. If net productivity is unsustainable (i.e. <0) those elements become red
+The grey distribution shown in the background represents the gross productivit (no harvest). It is from this distribution that the annual harvestable biomass is calculated. Net productivity (inclusive of harvest) is represented by the foreground distribution. The difference between the two graphical peaks represents the impact of the harvest. If net productivity is unsustainable (i.e. <0) those elements become red.
 }
 \value{
 Returns a frequency histogram and summary of gross productivity (no harvest)and net productivity (inclusive of harvest). Also returns a graphical depiction of the comparative variability of parameters.
