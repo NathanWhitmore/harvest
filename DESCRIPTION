@@ -1,8 +1,15 @@
 Package: harvest
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Visualising the Sustainability of a Wildlife Harvest
 Version: 0.1.0
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
+Author: Nathan Whitmore
+Maintainer: <nwhitmore.work@gmail.com>
+Description: This package is designed to aid wildlife managers visualise the potential sustainability of harvested wildlife populations based on the best available data
+License: GPL-3
 LazyData: TRUE
+Imports:
+  ggplot2,
+  ggpubr,
+  rootSolve
+Suggests:
+  popbio
