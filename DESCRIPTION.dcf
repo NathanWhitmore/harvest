@@ -1,0 +1,15 @@
+Package: harvest
+Type: Package
+Title: Visualising the Sustainability of a Wildlife Harvest
+Version: 0.1.0
+Author: Nathan Whitmore
+Maintainer: <nwhitmore.work@gmail.com>
+Description: This package is designed to aid wildlife managers visualise the potential sustainability of harvested wildlife populations based on the best available data
+License: GPL-3
+LazyData: TRUE
+Imports:
+  ggplot2,
+  ggpubr,
+  rootSolve
+Suggests:
+  popbio
