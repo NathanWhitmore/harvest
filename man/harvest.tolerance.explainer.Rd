@@ -13,7 +13,9 @@ harvest.tolerance.explainer(seed, name,site, iterations, area, growth, density, 
   \item{seed}{A number which acts as a random seed to allow replication of results}
   \item{name}{Text representing the name of the site}
   \item{iterations}{The number of resampling iterations to generate Monte Carlo estimates, good results are achieved around 100,000}
-  \item{area}{The size of the study area in square kilometers}
+  \item{area}{The size of the study area}
+  \item{units}{Text naming the units of area and density}
+  \item{threshold}{User defined net productivity threshold for sustainabililty}
   \item{growth}{Samples representing the distribution of the finite rate of growth of the population}
   \item{density}{Samples representing the number of individuals within the area}
   \item{biomass}{Samples representing the biomass (weight) of individuals within the area}
@@ -47,6 +49,8 @@ harvest.tolerance.explainer(
   site = "Somewhere in DRC",
   iterations = 100000,
   area = 25,
+  units = "ha",
+  threshold = 0,
   growth = rnorm(100000, mean=1.13, sd =0.03),
   density = runif(100000, min=10, max=100),
   biomass = rnorm(100000, mean=2.275, sd =0.386),

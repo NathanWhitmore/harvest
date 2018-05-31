@@ -15,9 +15,13 @@
 #   Test Package:              'Ctrl + Shift + T'
 
 
-harvest.tolerance.explainer <- function(name, site, area,iterations, growth,density, biomass, offtake, seed) {
+harvest.tolerance.explainer <- function(name, site, area,units, threshold, iterations, growth,density, biomass, offtake, seed) {
 
   ########### Algorithm ###########
+  # error check
+
+  try(if(threshold < 0) return(warning("Error: interpretation not meaningful when threshold set below 0")))
+
   # set seed to allow reproducibility
   set.seed(seed)
 
@@ -33,9 +37,9 @@ harvest.tolerance.explainer <- function(name, site, area,iterations, growth,dens
   gross.productivity <-(growth-1)*density*biomass
 
   # summary statistics
-  harvestable.biomass <- median((growth-1)*density*biomass)
+  harvestable.biomass <- median((growth-1)*density*biomass)-threshold
   net.offtake <- median(offtake)
-  sustainable <- ifelse(net.productivity<0,F,T)
+  sustainable <- ifelse(net.productivity<threshold,F,T)
   intervention <- median(net.offtake-harvestable.biomass)
 
   # new dataframe
@@ -46,9 +50,9 @@ harvest.tolerance.explainer <- function(name, site, area,iterations, growth,dens
 
   # graph production using gross productivity as "grey ghost"
   main <- ggplot()+
-    ggtitle(paste(name,": ",site," [", area," sq km]", sep=""))+
-    geom_histogram(data=graph, aes(x=gross.productivity),fill="grey90",alpha=1, breaks = seq(from=min(net.productivity), to=max(gross.productivity), by =iterations*0.0001))+
-    geom_histogram(data=graph, aes(x=net.productivity, fill=sustainable), breaks = seq(from=min(net.productivity), to=max(gross.productivity), by =iterations*0.0001), position="dodge")+
+    ggtitle(paste(name,": ",site," [", area, " ",units,"]", sep=""))+
+    geom_histogram(data=graph, aes(x=gross.productivity),fill="grey90",alpha=1, breaks = seq(from=min(net.productivity), to=max(gross.productivity), by =(max(gross.productivity)-min(net.productivity))/200))+
+    geom_histogram(data=graph, aes(x=net.productivity, fill=sustainable), breaks = seq(from=min(net.productivity), to=max(gross.productivity), by =(max(gross.productivity)-min(net.productivity))/200), position="dodge")+
     theme_bw()+
     scale_fill_manual(values=c("red","black"))+
     theme(axis.title = element_text(size = 12, face = "bold"))+
@@ -56,22 +60,21 @@ harvest.tolerance.explainer <- function(name, site, area,iterations, growth,dens
     theme(legend.title = element_text(size = 10, face = "bold"))+
     ylab("Count\n")+
     xlab("\n Net productivity \n (kg per year)")+
-    labs(
-      caption =
+    labs(caption =
         "\nNotes: The grey distribution shown in the background represents the gross productivity
       (no harvest). It is from this distribution that the annual harvestable biomass is
       calculated. Net productivity (inclusive of harvest) is represented by the foreground
       distribution. The difference between the two graphical peaks represents the impact of the
       harvest. If net productivity is unsustainable (i.e. <0) those elements become red.",
-      subtitle =paste("\nLikelihood of unsustainable harvest = ", round(failure,1),"%",
+      subtitle =paste("\nLikelihood of unsustainable harvest = ", round(failure,1),"%","using threshold of",threshold,"kg",
                       "\n",
-                      "\nAnnual harvestable biomass (median) = ", round(harvestable.biomass,0), " kg",
-                      "\nNet offtake (median) = ", round(net.offtake,0), " kg",
-                      "\nMinimum intervention (median) = ", ifelse(intervention>0, paste(round(intervention ,0)," kg"),
+                      "\nAnnual harvestable biomass (median - threshold) = ", round(harvestable.biomass,0), "kg",
+                      "\nNet offtake (median) = ", round(net.offtake,0), "kg",
+                      "\nMinimum intervention (median + threshold) = ", ifelse(intervention>0, paste(round(intervention ,0),"kg"),
                                                                    paste("no intervention required ",
                                                                          "[",
                                                                          round(intervention*-1 ,0),
-                                                                         " kg available"
+                                                                         "kg available"
                                                                          ,"]\n", sep=""))
       ))
 
