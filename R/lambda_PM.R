@@ -1,4 +1,4 @@
-lambda.PM <- function(A, b, W, La, P){
+lambda_PM <- function(A, b, W, La, P){
   func <- function(L) {
     (P*L^-1) + (La*b*L^(-A))-(La*b*P^(W-A+1))*L^(-1*(W+1)) -1
   }
