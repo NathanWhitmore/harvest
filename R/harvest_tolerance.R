@@ -1,20 +1,4 @@
 
-# Definitions #
-# name = wildlife species name in "" e.g. "Bay Duiker"
-# site = project site unit name in "" e.g. "Serengi"
-# area = in square kilometers
-# growth = population growth rate (as a lambda) i.e. 10% = 1.1, 20% = 1.2
-# density = individuals per square kilometer
-# biomass = kg per square kilometer
-# offtake = annual offtake (kg) within project area
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Build and Reload Package:  'Ctrl + Shift + B'
-#   Check Package:             'Ctrl + Shift + E'
-#   Test Package:              'Ctrl + Shift + T'
-
-
 harvest_tolerance <- function(name, site, area,units, threshold, iterations, growth,density, biomass, offtake, seed) {
 
   ########### Algorithm ###########

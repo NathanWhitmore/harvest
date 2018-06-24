@@ -1,0 +1,195 @@
+---
+title: "Introduction to the package 'harvest'"
+author: "Nathan Whitmore"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+  
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+Conservation practitioners the world over have to make decisions based on limited amounts of empirical data.
+Estimating whether or not a specific wildife population is in need of an intervention to remain viable in the face of a harvest
+is one such dilemma. In much of the world harvested wildlife remains nutritionally important for many forest fringing human communities.
+The productivity of such species, and the potentially sustainability (or unsustianability) of the harvest only emerges slowly 
+over time. The reality is, however, important wildlife management decisions will preceded good ecological data. This package 
+"harvest" attempts to aid conservation practitioners in visualising the possible sustainability of the population in question
+given the knowledge at hand.
+
+### Concept
+The basic concept of this package is to build a simple to use package in R to help wildlife practicioners visualise graphically 
+the possibility of a population being sustainably harvested based on knowledge at hand using estimates of:
+
+1. population growth 
+1. density
+1. biomass
+1. offtake
+  
+The package's main  function is "harvest.tolerance" which is arranged in such a way that existing knowledge (real data, surrogates,
+and informed guestimates) can be used to make a visual estimate using a simple Monte Carlo recombination technique. 
+
+### How to download the 'harvest' package
+
+First install the "devtools" package then run:
+```
+library("devtools") 
+install_github("NathanWhitmore/harvest")
+```
+
+### Then load the 'harvest package'
+```{r message = FALSE}
+library(harvest)
+```
+
+
+### First steps: estimating growth from life history parameters
+
+Most ecologists and conservationists are very poor at estimating growth rates of wildife populations. Additionally, much of the literature has been based on the approaches of Cole (1954) and Robinson and Redford (1991). Both of the approaches are based upon the unrealistic assumption of individuals in the population being  **immortal**.Robinson and Redford attemptted to resolved this issue (unsuccessfully) by the additional of an abitrary age based conversion factor. While wildife biologists will likely have some data on biomass and at least a feel for density and  offtake population growth for many is elusive.
+
+Slade et al. (1998) showed that more accurate estimates could be obtained by the addition of crude survival rates using their "PM" methodology. This method executed in the package by function ```lambda_PM()```. Such a function delivers a reasonable estimate of finite growth rate  e.g. life history data from *Ochotona princeps* (Slade et al. 1998): 
+
+```{r echo = TRUE}
+lambda_PM(
+  a = 1,  		# age of first reproduction
+  b = 3.25, 	# number of female offspring per female
+  w = 6,		# max age of reproduction
+  la = 0.11, 	# survival rate to adult (not annual)
+  p = 0.7		# annual survival rate as adult
+  )
+```
+
+The "PM" methodology of Slade et al. (1998) is highly robust and is equivalent to a simplied population projection matrix in which the the stages of matrix are set to represent age and there is obligate death of adults at the final stage (terminal = TRUE). This is demonstrated by the ```lambda_matrix()``` function which allows a straight forward transition from demographic data to population projection matrix approach.
+
+```{r echo = TRUE}
+lambda_matrix(
+  r.stage = 1 ,    # stage of first reproduction
+  b = 3.25,  # number of female offspring per female
+  stages = 6 , # number of stages
+  S = c(0.11,rep(0.7,5)),  # survival rate vector
+  terminal =TRUE
+)
+```
+
+A comparison between the impact of the assumption of on population growth of obligate and non-obligate death of adults is undertaken simply by changing the argument ```terminal = TRUE``` to ```terminal = FALSE``` e.g.:
+
+```{r echo = TRUE}
+lambda_matrix(
+  r.stage = 1 ,    # stage of first reproduction
+  b = 3.25,  # number of female offspring per female
+  stages = 6 , # number of stages
+  S = c(0.11,rep(0.7,5)),  # survival rate vector
+  terminal =FALSE
+)
+```
+
+The function ```lambda_matrix()``` will also return a matrix object named ```pop.matrix``` which is then available to the dependency package ```popbio``` for additional analyses such as elasticity. Elasticities (and their cousin ```sensitivity```) are particularly useful in identifying key life stages which are have a disproportionate effect on the finite rate of growth.
+
+```{r echo = TRUE}
+elasticity(pop.matrix)
+```
+
+From this analysis we can see the first stage (in this case first year) survival rate is most critical in our estimation. Therefore we might choose to priortise any field data collection to establish this rate robustly. 
+
+Once we have established a defensible population growth rate we now in a position to combine this with our current knowledge to estimate the sustainability of a harvest
+
+### Estimating the sustainability of a harvest
+
+For example if we are interested in the sustainability of hunting of the Admiralty cuscus (*Spilocuscus kraemeri*) a little known marsupial species present on Manus Island, Papua New Guinea we could use a obtain a defensible demographic estaimates from existing information (sensu Whitmore et al. 2016) giving:
+
+```{r echo = TRUE}
+lambda_matrix(
+  r.stage = 2 ,    # stage of first reproduction
+  b = 0.7,  # number of female offspring per female
+  stages = 2 , # number of stages
+  S = c(0.65, 0.82),  # survival rate vector
+  terminal =FALSE
+)
+
+elasticity(pop.matrix)
+```
+
+Thereby informing us that adult survival is the critical parameter required for accurate estimation of the finite rate of growth. 
+
+We now are in a position to use the ```harvest_tolerance()``` function. For the parameters of:
+* growth  = 100,000 samples drawn from a normal distribution based around our estimation from lambda_matrix()
+* density = 100,000 samples drawn from a uniform distribution based around preliminary field data
+* biomass = 100,000 samples drawn from a normal distribution based around empirical field results
+* offtake = 100,000 samples drawn from a normal distribution based around a guestimate of 1 kg per week
+
+
+```{r echo = TRUE, fig.width=9, fig.height=5}
+
+harvest_tolerance(
+  seed = 0,
+  name = "Admiralty cuscus",
+  site = "Welei",
+  iterations = 100000,
+  area = 21,
+  units ="ha",
+  threshold = 0,
+  growth = rnorm(100000, mean=1.145663, sd =0.03),
+  density = runif(100000, min=3, max=10),
+  biomass = rnorm(100000, mean=2.275, sd =0.386),
+  offtake = rnorm(100000, mean=52, sd =6)
+)
+
+```
+
+The left graphics panel depicts the distribution function  of the gross productivity (grey: background = "no harvest" scenario) and net productivity (foreground: black / red = "harvest" scenario) grey distribution shown in the background of the left graphics panel represents the gross productivity (no harvest). The difference between the two graphical peaks represents the impact of the harvest. If net productivity is unsustainable (i.e. < 0 by default, or the value of a set threshold) those elements display as red.
+
+The right graphics panel depicts the distribution of each parameter contributing to the net productivity standardised by dividing by the median (not mean, as some distributions may be non-linear). The distributions shown represent the intervals between the 1st and 99th percentiles.  As a rule of thumb the measurement of offtake is the most important parameter (as it is the value which differentiates net productivity from gross producitivity). Thereafter the most variable (imprecise component) of gross productivity should be prioritised to improve the overall precision of estimate.
+
+The ```harvest_threhold()``` function also returns a report giving the likelihood of sustainability given the knowledge at hand, as well as the 
+minimum intervention (offset) required to attain that goal.
+
+The resulting net and primary productivity is, however, under the assumption of an instanteous harvest at the end of the post-breeding period. This will over estimate the ability the population's ability to be sustainably harvested 
+if the population is subject to continuous harvest. Under such circumstances a
+more refined mathematical approach would be required.
+
+### Adding a buffer
+
+In advance of better data or a more refined approch a safety 
+margin or buffer could be introduced (represented by a threshold value in kilograms) as a stop-gap intervention. 
+
+```{r echo = TRUE, fig.width=9, fig.height=5}
+
+harvest_tolerance(
+  seed = 0,
+  name = "Admiralty cuscus",
+  site = "Welei",
+  iterations = 100000,
+  area = 21,
+  units ="ha",
+  threshold = 20,
+  growth = rnorm(100000, mean=1.145663, sd =0.03),
+  density = runif(100000, min=3, max=10),
+  biomass = rnorm(100000, mean=2.275, sd =0.386),
+  offtake = rnorm(100000, mean=52, sd =6)
+)
+
+```
+
+Under such circumstances the likelihood of unsustainability increases as a greater intervention would be required to ensure the additional buffer is also meet.
+
+### Finding the accumulative probability of obtaining a particular productivity value
+
+The ```harvest_tolerance()``` function sends a data.frame called "Monte.Carlo" to the global enivronment which allows the user to undertake further graphing. 
+
+The ```prob_dist()``` function uses this data.frame to assess the probability of obtaining a particular productivity value (or lower) e.g. for a value of 20 kg
+
+```{r echo = TRUE}
+# empirical cumulative distribution function for gross production of 20 kg
+prob_dist(20, net=FALSE)
+
+# empirical cumulative distribution function for net production of 20 kg
+prob_dist(20, net=TRUE)
+
+# empirical cumulative distribution function for net production of 20 kg (default)
+prob_dist(20)
+```
+
+### Disclaimer
+
+There is a vast array of mathematical tools to assess sustainability. However,
+the reality is that most field practicioners are not mathematical experts and do not have the time to become proficient in esoteric mathematical techniques. They require assistance and access to usable tools. The package ```harvest``` is my attempt to begin to bridge this gap. It is not deisgned to be a panecea but rather a tool to encourage evidence based decision making.

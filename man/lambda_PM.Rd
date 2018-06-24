@@ -3,18 +3,20 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{Lambda estimates using Slade et al's 1998 PM approach}
 \description{
-A calculation of the finite rate of increase (lambda) using the Slade et al (1998) "PM" model. The model based on age of first reproduction, number of female offspring per female, maximum age of reproduction, and  two pieces of empirical survival data: 1) the juvenile survival rate through to adulthood, and annual survival rate for adults)
+A calculation of the finite rate of increase (lambda) using the Slade et al (1998) "PM" model. The model is based on age of first reproduction, number of female offspring per female, maximum age of reproduction, and two pieces of empirical survival data: 1) the juvenile survival rate through to adulthood, and 2) annual survival rate for adults.
+
+The method is equivalent to the finite rate of increase produced by a population projection matrix under the assumptions of a pality at maximum age.
 }
 \usage{
-lambda_PM(A, b, W, La, P)
+lambda_PM(a, b, w, la, p)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{A}{Age of first reproduction}
+  \item{a}{Age of first reproduction}
   \item{b}{Number of female offspring per female}
-  \item{W}{Maximum age of reproduction}
-  \item{La}{Survival rate of juveniles through to adulthood}
-  \item{P}{Annual survival rate of adults}
+  \item{w}{Maximum age of reproduction}
+  \item{la}{Survival rate of juveniles through to adulthood (not annual survival rate)}
+  \item{p}{Annual survival rate of adults}
   }
 
 \details{
@@ -39,11 +41,13 @@ Nathan Whitmore
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
+# e.g. life history data from Ochotona princeps (Slade et al. 1998)
+
 lambda_PM(
-  A = 1 # age of first reproduction,
-  b = 3.25 # number of female offspring per female,
-  W = 6 # max age of reproduction,
-  La = 0.11 # survival rate to adult (not annual),
-  P =0.7  # annual survival rate as adult
+  a = 1, # age of first reproduction,
+  b = 3.25, # number of female offspring per female,
+  w = 6, # max age of reproduction,
+  la = 0.11, # survival rate to adult (not annual),
+  p =0.7,  # annual survival rate as adult
   )
 }
