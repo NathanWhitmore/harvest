@@ -34,18 +34,19 @@ harvest_tolerance <- function(name, site, area,units, threshold, iterations, gro
 
   # Monte.Carlo graph production using gross productivity as "grey ghost"
   main <- ggplot()+
-    ggtitle(paste(name,": ",site," [", area, " ",units,"]", sep=""))+
+    ggtitle(paste(name,": ",site," (", area, " ",units,")", sep=""))+
     geom_histogram(data=Monte.Carlo, aes(x=gross.productivity),fill="grey90",alpha=1, breaks = seq(from=min(net.productivity), to=max(gross.productivity), by =(max(gross.productivity)-min(net.productivity))/200))+
     geom_histogram(data=Monte.Carlo, aes(x=net.productivity, fill=sustainable), breaks = seq(from=min(net.productivity), to=max(gross.productivity), by =(max(gross.productivity)-min(net.productivity))/200), position="dodge")+
     theme_bw()+
     scale_fill_manual(values=c("red","black"))+
     theme(axis.title = element_text(size = 12, face = "bold"))+
-    theme(plot.title = element_text(size = 18, face = "bold"))+
+    theme(plot.title = element_text(size = 16, face = "bold"))+
     theme(legend.title = element_text(size = 10, face = "bold"))+
+    theme(plot.caption =element_text(size = 8))+
     ylab("Count\n")+
     xlab("\n Net productivity \n (kg per year)")+
-    labs(subtitle =paste( "\nUnder the assumption of instantaneous harvest at end of post-breeding period",
-           "\nLikelihood of unsustainable harvest = ", round(failure,1),"%","using threshold of",threshold,"kg",
+    labs(subtitle =paste(
+           "\nLikelihood of unsustainable harvest = ", round(failure,1),"%"," \nUsing threshold of",threshold,"kg",
                          "\n",
                          "\nNet offtake (median) = ", round(net.offtake,0), "kg",
                          "\nAnnual median harvestable biomass (- threshold) = ", round(harvestable.biomass,0), "kg",
@@ -75,6 +76,7 @@ harvest_tolerance <- function(name, site, area,units, threshold, iterations, gro
     theme(axis.title = element_text(size = 12, face = "bold"))+
     theme(plot.title = element_text(size = 18, face = "bold"))+
     theme(legend.title = element_text(size = 10, face = "bold"))+
+    theme(plot.caption =element_text(size = 8))+
     ggtitle("")+
     ylab("")+
     xlab("\nProportional variation from median\n")+

@@ -13,7 +13,9 @@ lambda_matrix <- function(r.stage, b, stages, S, terminal){
          mat [stages,stages] <- 0
        }
     mat <- mat[-(stages+1),]
-    return(list("Transition matrix" =mat,"Lambda:"=lambda(mat)))
+    pop.matrix <<- mat
+    return(list("Transition matrix" = mat,"Lambda:"=lambda(mat)))
+
 }
 
 
