@@ -1,9 +1,9 @@
 # Quick stage based population projection matrix
 
-lambda_matrix <- function(f, b, stages, S, terminal){
+lambda_matrix <- function(r.stage, b, stages, S, terminal){
   if(missing(terminal)) {terminal=FALSE} else {terminal=terminal}
 
-    Fec <- c(rep(0,f-1),rep(b,stages-(f-1)))
+    Fec <- c(rep(0,r.stage -1),rep(b,stages-(r.stage-1)))
     Fec <- S * Fec
     Sur <- diag(S)
     mat <-rbind(Fec,Sur)
