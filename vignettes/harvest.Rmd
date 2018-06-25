@@ -21,7 +21,7 @@ given the knowledge at hand.
 The basic concept of this package is to build a simple to use package in R to help wildlife practicioners visualise graphically 
 the possibility of a population being sustainably harvested based on knowledge at hand using estimates of:
 
-1. population growth 
+1. population growth (finite rate of growth, $\lambda$, "lambda")
 1. density
 1. biomass
 1. offtake
@@ -32,10 +32,14 @@ and informed guestimates) can be used to make a visual estimate using a simple M
 ### How to download the 'harvest' package
 
 First install the "devtools" package then run:
-```
+
+```{r eval = FALSE}
 library("devtools") 
 install_github("NathanWhitmore/harvest", build_vignettes = TRUE)
 ```
+
+
+
 The argument ```build_vignettes = TRUE``` allows you to access the tutorial vignette.
 
 ### Then load the 'harvest package'
@@ -47,11 +51,18 @@ library(harvest)
 
 You can get help on the package by checking the tutorial vignette:
 
-```{r message = FALSE}
+```{r eval = FALSE}
 vignette("harvest")
-
 ```
 
+There is also help available on all the harvest functions via:
+
+```{r eval = FALSE}
+?lambda_PM()
+?lambda_matrix()
+?harvest_tolerance()
+?prob_dist()
+```
 
 
 ### First steps: estimating growth from life history parameters
@@ -152,7 +163,7 @@ The left graphics panel depicts the distribution function  of the gross producti
 
 The right graphics panel depicts the distribution of each parameter contributing to the net productivity standardised by dividing by the median (not mean, as some distributions may be non-linear). The distributions shown represent the intervals between the 1st and 99th percentiles.  As a rule of thumb the measurement of offtake is the most important parameter (as it is the value which differentiates net productivity from gross producitivity). Thereafter the most variable (imprecise component) of gross productivity should be prioritised to improve the overall precision of estimate.
 
-The ```harvest_threhold()``` function also returns a report giving the likelihood of sustainability given the knowledge at hand, as well as the 
+The ```harvest_threshold()``` function also returns a report giving the likelihood of sustainability given the knowledge at hand, as well as the 
 minimum intervention (offset) required to attain that goal.
 
 The resulting net and primary productivity is, however, under the assumption of an instanteous harvest at the end of the post-breeding period. This will over estimate the ability the population's ability to be sustainably harvested 
@@ -205,3 +216,17 @@ prob_dist(20)
 
 There is a vast array of mathematical tools to assess sustainability. However,
 the reality is that most field practicioners are not mathematical experts and do not have the time to become proficient in esoteric mathematical techniques. They require assistance and access to usable tools. The package ```harvest``` is my attempt to begin to bridge this gap. It is not designed to be a panecea but rather a tool to encourage evidence based decision making.
+
+### References
+
+Cole L.C. (1954). The population consequences of life history phenomena. *The Quarterly Review of Biology*, 29(2), 103-137.
+
+Robinson J.G., & Redford, K.H. (1991). *Neotropical wildlife use and conservation*. University of Chicago Press Ltd, London.
+
+Slade N.A., Gomulkiewicz R. & Alexander, H. M. (1998). Alternatives to Robinson and Redford’s method of assessing overharvest from incomplete demographic data. *Conservation Biology*, 12(1), 148-155.
+
+Whitmore, N., Lamaris J., Takendu W., Charles D., Chuwek T., Mohe B., Kanau L., & Pe-eu S. (2016). The context and potential sustainability of traditional terrestrial periodic tambu areas: insights from Manus Island, Papua New Guinea. *Pacific Conservation Biology*, 22(2), 151-158.
+
+
+
+
