@@ -36,11 +36,22 @@ First install the "devtools" package then run:
 library("devtools") 
 install_github("NathanWhitmore/harvest", build_vignettes = TRUE)
 ```
+The argument ```build_vignettes = TRUE``` allows you to access the tutorial vignette.
 
 ### Then load the 'harvest package'
 ```{r message = FALSE}
 library(harvest)
 ```
+
+### To get help 
+
+You can get help on the package by checking the tutorial vignette:
+
+```{r message = FALSE}
+vignette("harvest")
+
+```
+
 
 
 ### First steps: estimating growth from life history parameters
