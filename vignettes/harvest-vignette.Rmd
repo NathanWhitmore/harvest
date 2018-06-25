@@ -34,7 +34,7 @@ and informed guestimates) can be used to make a visual estimate using a simple M
 First install the "devtools" package then run:
 ```
 library("devtools") 
-install_github("NathanWhitmore/harvest")
+install_github("NathanWhitmore/harvest", build_vignettes = TRUE)
 ```
 
 ### Then load the 'harvest package'
@@ -45,7 +45,7 @@ library(harvest)
 
 ### First steps: estimating growth from life history parameters
 
-Most ecologists and conservationists are very poor at estimating growth rates of wildife populations. Additionally, much of the literature has been based on the approaches of Cole (1954) and Robinson and Redford (1991). Both of the approaches are based upon the unrealistic assumption of individuals in the population being  **immortal**.Robinson and Redford attemptted to resolved this issue (unsuccessfully) by the additional of an abitrary age based conversion factor. While wildife biologists will likely have some data on biomass and at least a feel for density and  offtake population growth for many is elusive.
+Most ecologists and conservationists are very poor at estimating growth rates of wildife populations. Additionally, much of the literature has been based on the approaches of Cole (1954) and Robinson and Redford (1991). Both of the approaches are based upon the unrealistic assumption of individuals in the population being  *immortal*. Robinson and Redford attempted to resolved this issue (unsuccessfully) by the additional of an abitrary age based conversion factor. While wildife biologists will likely have some data on biomass and at least a feel for density and  offtake population growth for many is elusive.
 
 Slade et al. (1998) showed that more accurate estimates could be obtained by the addition of crude survival rates using their "PM" methodology. This method executed in the package by function ```lambda_PM()```. Such a function delivers a reasonable estimate of finite growth rate  e.g. life history data from *Ochotona princeps* (Slade et al. 1998): 
 
@@ -112,10 +112,11 @@ elasticity(pop.matrix)
 Thereby informing us that adult survival is the critical parameter required for accurate estimation of the finite rate of growth. 
 
 We now are in a position to use the ```harvest_tolerance()``` function. For the parameters of:
-* growth  = 100,000 samples drawn from a normal distribution based around our estimation from lambda_matrix()
-* density = 100,000 samples drawn from a uniform distribution based around preliminary field data
-* biomass = 100,000 samples drawn from a normal distribution based around empirical field results
-* offtake = 100,000 samples drawn from a normal distribution based around a guestimate of 1 kg per week
+
+1. growth  = 100,000 samples drawn from a normal distribution based around our estimation from lambda_matrix()
+1. density = 100,000 samples drawn from a uniform distribution based around preliminary field data
+1. biomass = 100,000 samples drawn from a normal distribution based around empirical field results
+1. offtake = 100,000 samples drawn from a normal distribution based around a guestimate of 1 kg per week
 
 
 ```{r echo = TRUE, fig.width=9, fig.height=5}
@@ -174,7 +175,7 @@ Under such circumstances the likelihood of unsustainability increases as a great
 
 ### Finding the accumulative probability of obtaining a particular productivity value
 
-The ```harvest_tolerance()``` function sends a data.frame called "Monte.Carlo" to the global enivronment which allows the user to undertake further graphing. 
+The ```harvest_tolerance()``` function sends a data.frame called "Monte.Carlo" to the global environment which allows the user to undertake further graphing. 
 
 The ```prob_dist()``` function uses this data.frame to assess the probability of obtaining a particular productivity value (or lower) e.g. for a value of 20 kg
 
@@ -192,4 +193,4 @@ prob_dist(20)
 ### Disclaimer
 
 There is a vast array of mathematical tools to assess sustainability. However,
-the reality is that most field practicioners are not mathematical experts and do not have the time to become proficient in esoteric mathematical techniques. They require assistance and access to usable tools. The package ```harvest``` is my attempt to begin to bridge this gap. It is not deisgned to be a panecea but rather a tool to encourage evidence based decision making.
+the reality is that most field practicioners are not mathematical experts and do not have the time to become proficient in esoteric mathematical techniques. They require assistance and access to usable tools. The package ```harvest``` is my attempt to begin to bridge this gap. It is not designed to be a panecea but rather a tool to encourage evidence based decision making.

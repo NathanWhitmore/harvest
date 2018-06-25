@@ -12,5 +12,6 @@ Depends:
   ggpubr,
   rootSolve,
   popbio
-
-
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
