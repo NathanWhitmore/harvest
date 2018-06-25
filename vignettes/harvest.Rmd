@@ -26,7 +26,7 @@ the possibility of a population being sustainably harvested based on knowledge a
 1. biomass
 1. offtake
   
-The package's main  function is "harvest.tolerance" which is arranged in such a way that existing knowledge (real data, surrogates,
+The package's main  function is ```harvest.tolerance()``` which is arranged in such a way that existing knowledge (real data, surrogates,
 and informed guestimates) can be used to make a visual estimate using a simple Monte Carlo recombination technique. 
 
 ### How to download the 'harvest' package
@@ -135,7 +135,7 @@ Thereby informing us that adult survival is the critical parameter required for 
 
 We now are in a position to use the ```harvest_tolerance()``` function. For the parameters of:
 
-1. growth  = 100,000 samples drawn from a normal distribution based around our estimation from lambda_matrix()
+1. growth  = 100,000 samples drawn from a normal distribution based around our estimation of lambda
 1. density = 100,000 samples drawn from a uniform distribution based around preliminary field data
 1. biomass = 100,000 samples drawn from a normal distribution based around empirical field results
 1. offtake = 100,000 samples drawn from a normal distribution based around a guestimate of 1 kg per week
