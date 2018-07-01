@@ -48,15 +48,15 @@ Nathan Whitmore
 \examples{
 harvest_tolerance(
   seed = 0,
-  name = "Bay Duiker",
-  site = "Somewhere in DRC",
+  name = "Admiralty cuscus",
+  site = "Welei",
   iterations = 100000,
-  area = 25,
-  units = "ha",
+  area = 21,
+  units ="ha",
   threshold = 0,
-  growth = rnorm(100000, mean=1.13, sd =0.03),
-  density = runif(100000, min=10, max=100),
-  biomass = rnorm(100000, mean=2.275, sd =0.386),
-  offtake = 365 * rnorm(100000, mean=0.5, sd =0.1)*biomass
-  )
+  growth = rnorm(100000, mean=1.15, sd =0.03),
+  density = runif(100000, min=3, max=10),
+  biomass = rnorm(100000, mean=2.28, sd =0.39),
+  offtake = rnorm(100000, mean=52, sd =6)
+)
 }
