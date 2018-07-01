@@ -60,9 +60,8 @@ There is also help available on all the harvest functions via:
 ?lambda_PM()
 ?lambda_matrix()
 ?harvest_tolerance()
-?prob_dist()
+?buffer_req()
 ```
-
 
 ### First steps: estimating growth from life history parameters
 
@@ -112,7 +111,7 @@ elasticity(pop.matrix)
 
 From this analysis we can see the first stage (in this case first year) survival rate is most critical in our estimation. Therefore we might choose to prioritise any field data collection to establish this rate robustly. 
 
-Once we have established a defensible population growth rate we now in a position to combine this with our current knowledge to estimate the sustainability of a harvest
+Once we have established a defensible population growth rate we now in a position to combine this with our current knowledge to estimate the sustainability of a harvest.
 
 ### Estimating the sustainability of a harvest
 
@@ -128,7 +127,7 @@ lambda_matrix(
 )
 ```
 
-Giving an annual growth rate of ~14.6% per year.
+Giving an annual growth rate of ~15 % per year.
 
 ```{r echo = TRUE}
 elasticity(pop.matrix)
@@ -143,7 +142,7 @@ We now are in a position to use the ```harvest_tolerance()``` function. For the 
 1. biomass = 100,000 samples drawn from a normal distribution based around empirical field results
 1. offtake = 100,000 samples drawn from a normal distribution based around a guestimate of 1 kg per week.
 
-**Warning:** it is important to note in the estimation below that the harvest is modelled as an instantaneous harvest occuring after the population has reproduced. Mathematicality, a population subject to continual harvest should have its growth modelled through a matrix multiplication process (see Caswell 2001 for guidance). However, even though the assumption of instantaneous harvest will typically be violated, in many cases, such an analysis maybe a useful first step to gauge a maximal (inflated) estimate of net production.
+**Warning:** it is important to note in the estimation below that the harvest is modelled as an instantaneous harvest occuring after the population has reproduced. Mathematicality, a population subject to continual harvest should have its growth modelled through a matrix multiplication process (see Caswell 2001 for guidance). However, even though the assumption of instantaneous harvest will typically be violated such an analysis maybe a useful first step to gauge a maximal (inflated) estimate of net production.
 
 ```{r echo = TRUE, fig.width=9, fig.height=5}
 
@@ -155,25 +154,25 @@ harvest_tolerance(
   area = 21,
   units ="ha",
   threshold = 0,
-  growth = rnorm(100000, mean=1.145663, sd =0.03),
+  growth = rnorm(100000, mean=1.15, sd =0.03),
   density = runif(100000, min=3, max=10),
-  biomass = rnorm(100000, mean=2.275, sd =0.386),
+  biomass = rnorm(100000, mean=2.28, sd =0.39),
   offtake = rnorm(100000, mean=52, sd =6)
 )
 
 ```
 
-The left graphics panel depicts the distribution function  of the gross productivity (grey: background = "no harvest" scenario) and net productivity (foreground: black / red = "harvest" scenario) grey distribution shown in the background of the left graphics panel represents the gross productivity (no harvest). The difference between the two graphical peaks represents the impact of the harvest. If net productivity is unsustainable (i.e. < 0 by default, or the value of a set threshold) those elements display as red.
+The function then produces a report. The left graphics panel depicts the distribution function  of the gross productivity (grey: background = "no harvest" scenario) and net productivity (foreground: black / red = "harvest" scenario) grey distribution shown in the background of the left graphics panel represents the gross productivity (no harvest). The difference between the two graphical peaks represents the impact of the harvest. If net productivity is unsustainable (i.e. < 0 by default, or the value of a set threshold) those elements display as red.
 
 The right graphics panel depicts the distribution of each parameter contributing to the net productivity standardised by dividing by the median (not mean, as some distributions may not be normally distributed). The distributions shown represent the intervals between the 1st and 99th percentiles.  As a rule of thumb the measurement of offtake is the most important parameter (as it is the value which differentiates net productivity from gross productivity). Thereafter the most variable (imprecise component) of gross productivity should be prioritised to improve the overall precision of estimate (i.e. density in the example).
 
-The ```harvest_threshold()``` function also returns a report giving the likelihood of sustainability given the knowledge at hand, as well as the 
+The ```harvest_threshold()``` function also returns the likelihood of sustainability given the knowledge at hand, as well as the 
 minimum intervention (offset) required to attain that goal.
 
 ### Adding a buffer
 
 In advance of better data or a more refined approch a safety 
-margin or buffer could be introduced (represented by a threshold value in kilograms) as a stop-gap intervention. 
+margin or buffer could be introduced (represented by a threshold value for sustainability in kilograms) should we be concerned that we may have overestimated production by a specific amount. In the example below we take a  pessimistic viewpoint - and interpret the outcome as warning that if our estimates overestimate production by 20 kg per year ~ 90 % of the time the harvest will be unsustainable.
 
 ```{r echo = TRUE, fig.width=9, fig.height=5}
 
@@ -185,9 +184,9 @@ harvest_tolerance(
   area = 21,
   units ="ha",
   threshold = 20,
-  growth = rnorm(100000, mean=1.145663, sd =0.03),
+  growth = rnorm(100000, mean=1.15, sd =0.03),
   density = runif(100000, min=3, max=10),
-  biomass = rnorm(100000, mean=2.275, sd =0.386),
+  biomass = rnorm(100000, mean=2.28, sd =0.39),
   offtake = rnorm(100000, mean=52, sd =6)
 )
 
@@ -195,27 +194,34 @@ harvest_tolerance(
 
 Under such circumstances the likelihood of unsustainability increases as a greater intervention would be required to ensure the additional buffer is also meet.
 
-### Finding the accumulative probability of obtaining a particular productivity value
+### Setting a safety buffer
 
-The ```harvest_tolerance()``` function sends a dataframe called "Monte.Carlo" to the R global environment which allows the user to undertake further graphing. 
-
-The ```prob_dist()``` function uses this data.frame to assess the probability of obtaining a particular productivity value (or lower) e.g. for a value of 20 kg
+The ```harvest_tolerance()``` function sends a dataframe called "Monte.Carlo" to the R global environment which allows the user to undertake further graphing. The ```buffer_req()``` function then uses this dataframe to assess the probability of obtaining a particular productivity value (or lower) e.g. for a value of 20 kg:
 
 ```{r echo = TRUE}
-# empirical cumulative distribution function for gross production of 20 kg
-prob_dist(20, net=FALSE)
-
 # empirical cumulative distribution function for net production of 20 kg
-prob_dist(20, net=TRUE)
+buffer_req(20, net=TRUE)
 
 # empirical cumulative distribution function for net production of 20 kg (default)
-prob_dist(20)
+buffer_req(20)
 ```
+
+As a consequence 88.2 % of the time the expected net productivity of the population under harvest would be less than 20 kg per year (i.e. it exactly mirrors the ```harvest_threshold()``` example above). In the same manner we can also examine what happens when we reduce the harvest by a given amount:
+
+```{r echo = TRUE}
+# empirical cumulative distribution function for net production under a 20 kg per year reduction in harvest
+buffer_req(-20)
+```
+
+By comparison if we can reduce the current harvest by 20 kg then only ~26 % of the scenarios might be unsustainable.
+
 
 ### Disclaimer
 
 There is a vast array of mathematical tools to assess sustainability. However,
 the reality is that most field practitioners are not mathematical experts and do not have the time to become proficient in esoteric mathematical techniques. They require assistance and access to usable tools. The package ```harvest``` is my attempt to begin to bridge this gap. It is not designed to be a panecea but rather a tool to encourage evidence based decision making.
+
+The package, while functional, is still in a development stage and as such I welcome any and all feedback. I can be contacted through **nwhitmore.work@gmail.com** or via my github site.
 
 ### References
 
