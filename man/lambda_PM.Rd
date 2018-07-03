@@ -48,6 +48,6 @@ lambda_PM(
   b = 3.25, # number of female offspring per female,
   w = 6, # max age of reproduction,
   la = 0.11, # survival rate to adult (not annual),
-  p =0.7,  # annual survival rate as adult
+  p =0.7  # annual survival rate as adult
   )
 }
