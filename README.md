@@ -29,4 +29,4 @@ First install the "devtools" package then run:
 
 ```library("devtools") ```
 
-```install_github("NathanWhitmore/harvest")```
+```install_github("NathanWhitmore/harvest",build_vignettes = TRUE)```
