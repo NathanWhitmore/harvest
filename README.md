@@ -27,6 +27,6 @@ of sustainability given the knowledge at hand, as well as the minimum interventi
 
 First install the "devtools" package then run:
 
-```library("devtools") ```
+```library("remotes") ```
 
-```install_github("NathanWhitmore/harvest", build_vignettes = TRUE)```
+```install_github("NathanWhitmore/harvest"```
