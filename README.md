@@ -5,7 +5,7 @@
 Conservation practitioners the world over have to make decisions based on limited amounts of empirical data.
 Estimating whether or not a specific wildife population is in need of an intervention to remain viable in the face of a harvest
 is one such dilemma. In much of the world harvested wildlife remains nutritionally important for forest fringing human communities.
-The productivity of such species, and the potentially sustainability (or unsustianability) of the harvest only emerges slowly 
+The productivity of such species, and the potentially sustainability (or unsustainability) of the harvest only emerges slowly 
 over time. The reality is, however, important wildlife management decisions will preceded good ecological data. This package 
 "harvest" attempts to aid conservation practitioners in visualising the possible sustainability of the population in question
 given the knowledge at hand.
