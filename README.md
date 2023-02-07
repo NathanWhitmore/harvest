@@ -1,4 +1,4 @@
-# harvest
+# harvest (an R package)
 ## Tools for estimating the sustainability of wildlife harvesting
 
 ### Introduction
@@ -25,7 +25,7 @@ of sustainability given the knowledge at hand, as well as the minimum interventi
 
 ### How to download
 
-First install the "devtools" package then run:
+First install the "remotes" R package then run:
 
 ```library("remotes") ```
 
